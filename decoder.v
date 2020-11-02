@@ -45,6 +45,7 @@ module decoder(
     case (counter_mode)
         1'b1: begin
          // Counter feed goes in here
+            four_bit_out <= temp_out;
         end
         1'b0 : begin
             case(op_code)
@@ -55,7 +56,7 @@ module decoder(
                          BCD[7:4] <= temp_tens;
                          BCD[3:0] <= temp_ones;
                          four_bit_out <= temp_out;
-                         end
+                         end                   
                 4'b0001: begin //negate b
                          Op <= 3'b001;
                          mode <= 1'b1;
@@ -179,6 +180,15 @@ module decoder(
                          BCD[3:0] <= temp_ones;
                          four_bit_out <= temp_out;
                          end
+                 // Defaults for latches
+                 default : begin
+                    BCD[11:8] <= 4'b0000;
+                    BCD[7:4] <= temp_tens;
+                    BCD[3:0] <= temp_ones;
+                    four_bit_out <= temp_out;
+                    Op <= 3'b000;
+                    mode <= 1'b1;
+                 end
                 endcase                                   
             end
         endcase
