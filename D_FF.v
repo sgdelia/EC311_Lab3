@@ -7,6 +7,12 @@ module D_FF(
     output reg Qbar 
     );
     
+    /*initial begin
+    Q <= 0;
+    Qbar <=0;
+    end
+    */
+    
     always @ (posedge clk)
     begin
     Q <= D;
