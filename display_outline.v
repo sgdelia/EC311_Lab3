@@ -23,8 +23,8 @@
 module display_outline(
 input CLK100MHZ, // This is the clock on my Basys 3. You'll have to change it for the school FPGA
 input mode, // hex or alu output
-input [11:0]instructions, // instructions fed to alu, in binary, simulated by switches for now
-input [11:0]alu_result, // what the alu spit out, BCD number, simulated by board switches for now
+input [11:0]instructions, // instructions fed to alu, in binary
+input [11:0]alu_result, // what the alu spit out, BCD number
 output reg [3:0]anode, // which anode we're on
 output reg [6:0]LED_out // segments of the anode
     );
@@ -70,6 +70,10 @@ always @ (*)begin
                 anode = 4'b0111; // activate 1, deactivate 2,3,4
                 LED_out = 7'b0000001; // Only 3 digits displayed     
                 end
+            default: begin
+            LED_out = 7'b0000001;
+            anode = 4'b0111;
+            end
            2'b01 : begin // middle left
                 anode = 4'b1011;
                 case(hundreds)
