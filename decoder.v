@@ -1,29 +1,10 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 10/13/2020 10:35:53 PM
-// Design Name: 
-// Module Name: decoder
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module decoder(
     input [3:0] a,
     input [3:0] b,
     input [3:0] op_code,
+    input [3:0] count_in,
     input counter_mode, // Make this either a button or switch, whatever fits
     output wire [11:0] instr_code,
     output reg [11:0] BCD,
@@ -38,10 +19,10 @@ module decoder(
     
     // Used to test counter 7 seg display functionality
     // When in hex mode, 7 seg will display count output
-    wire [3:0] count_sim;
-    assign count_sim = 4'b1111;
-    wire [3:0] count_sim_tens;
-    wire [3:0] count_sim_ones;
+    //wire [3:0] count;
+    //assign count_sim = 4'b1111;
+    wire [3:0] count_tens;
+    wire [3:0] count_ones;
     
     reg c_in = 1'b0;
     assign instr_code [7:4] = a;
@@ -57,9 +38,9 @@ module decoder(
             Op <= 3'b000; // This doesn't matter, only using hex
             mode <= 1'b0; // Doesn't matter, only using hex
             BCD[11:8] <= 4'b0000; // Positive sign
-            BCD[7:4] <= count_sim_tens;
-            BCD[3:0] <= count_sim_ones;
-            four_bit_out <= count_sim; // should be 1111
+            BCD[7:4] <= count_tens;
+            BCD[3:0] <= count_ones;
+            four_bit_out <= count_in; //input from counter
         end
         1'b0 : begin
             case(op_code)
@@ -211,7 +192,7 @@ module decoder(
     
     full_alu main_alu (.a(a), .b(b),.Op(Op), .c_out(c_out), .c_in(c_in), .out(temp_out),.mode(mode));
     BCD convert (.binary(temp_out),.tens(temp_tens),.ones(temp_ones));
-    BCD count_convert(.binary(count_sim), .tens(count_sim_tens), .ones(count_sim_ones));
+    BCD count_convert(.binary(count_in), .tens(count_tens), .ones(count_ones));
     // Counter module fed in here
     
     
