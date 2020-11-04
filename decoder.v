@@ -35,31 +35,17 @@ module decoder(
     wire [3:0] temp_out; // This is the 4 bit output needed for the VGA display
     wire [3:0] temp_tens;
     wire [3:0] temp_ones;
-    
-    // Used to test counter 7 seg display functionality
-    // When in hex mode, 7 seg will display count output
-    wire [3:0] count_sim;
-    assign count_sim = 4'b1111;
-    wire [3:0] count_sim_tens;
-    wire [3:0] count_sim_ones;
-    
     reg c_in = 1'b0;
     assign instr_code [7:4] = a;
     assign instr_code [3:0] = b;
     assign instr_code [11:8] = op_code;
-
     
-    always @(*)
+    always@(*)
     begin
     case (counter_mode)
         1'b1: begin
          // Counter feed goes in here
-            Op <= 3'b000; // This doesn't matter, only using hex
-            mode <= 1'b0; // Doesn't matter, only using hex
-            BCD[11:8] <= 4'b0000; // Positive sign
-            BCD[7:4] <= count_sim_tens;
-            BCD[3:0] <= count_sim_ones;
-            four_bit_out <= count_sim; // should be 1111
+            four_bit_out <= temp_out;
         end
         1'b0 : begin
             case(op_code)
@@ -211,7 +197,6 @@ module decoder(
     
     full_alu main_alu (.a(a), .b(b),.Op(Op), .c_out(c_out), .c_in(c_in), .out(temp_out),.mode(mode));
     BCD convert (.binary(temp_out),.tens(temp_tens),.ones(temp_ones));
-    BCD count_convert(.binary(count_sim), .tens(count_sim_tens), .ones(count_sim_ones));
     // Counter module fed in here
     
     
